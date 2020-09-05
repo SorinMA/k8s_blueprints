@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1 
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: 'nginx' # pentru ca utilizam nginx ca web server, portul default este 80
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /?(.*)
+            backend:
+              serviceName: clusterip1 # este folosit numele din metadata, si la fel si pentru o conexiune, tot numele din metadata
+              servicePort: 5000 # trebuie sa faca match cu port din clusterul ip corespunzator

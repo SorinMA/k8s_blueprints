@@ -1,0 +1,41 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: deployment1 
+spec:
+  replicas: 2 # numarul de copii
+  selector:
+    matchLabels:
+      component: app1 # este un tag pentru a identifica deploymentul
+  template:
+    metadata:
+      labels: # labels trebuie sa matchuiasca matchLabels
+        component: app1 
+    spec:
+      containers:
+        - name: server1 # nume container
+          image: patriciu/server1 # numele unei imagini
+          ports:
+            - containerPort: 6969 # portul aplicatiei
+          env:
+            - name: REDIS_HOST
+              value: nume_din_metadata_cip-ului_serviciului_pe_care_vrem_sa_l_accesam_ex_redis
+            - name: REDIS_PORT
+              value: "6379" # numerele trebuie scrise in ghilimele
+            - name: PGUSER
+              value: postgres # teoretic, in productie, PGUSER ar trebui sa fie secret
+            - name: PGHOST
+              value: postgres-cip #nume_din_metadata_CIP uluiserviciului_pe_care_vrem_sa_l_accesam_ex_postgres
+            - name: PGPORT
+              value: "5432"
+            - name: PGDATABASE
+              value: postgres # teoretic, in productie, PGDATABASE ar trebui sa fie secret
+            - name: PGPASSWORD # secret
+              valueFrom:
+                secretKeyRef: 
+                  name: pgpassword # nume secret
+                  key: PGPASSWORD # key secret, ce se afla in perechea key:value
+                  # iar value va fi folosit mai departe pentru 
+                  # pentru logare la baza de date
+                  # aceasta pereche name key:value este cel mai bine 
+                  # sa fie creata printr-o comanda imperativa
