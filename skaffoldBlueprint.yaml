@@ -1,0 +1,16 @@
+apiVersion: skaffold/v1beta2
+kind: Config
+build:
+  local:
+    push: false # spune ca modificarea sa fie doar locala, fara push pe Dockerhub
+  artifacts: # la artifacts se afla imaginile ce sunt managiuite de skaffold (adica imaginile folosite de containerele din nodurile de k8s)
+    - image: <img_name>
+      context: <relative_path_to_target_codebase>
+      docker:
+        dockerfile: <dockerfile_name>
+      sync:
+        '**/*.js': . # asta este partea care zice ca daca vede un fisier .js modificat, realizeaza si updateurile in containere
+# ps: asta e doar un schelet si poate avea nevoie de anumite modificari pentru a fi complet functional
+# cmd ce aplica acest config file pt skaffold: skaffold dev
+# cum ar trebui sa se numeasca fisierul skaffold: sjaffold.yaml
+
